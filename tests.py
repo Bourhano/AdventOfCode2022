@@ -8,3 +8,5 @@ print(b)
 
 from pathlib import Path
 print(Path('hi').__str__())
+
+print(len('SbcccccccccccaaaaaaaaaccccccccccchhhqqqtttxxxxE'))
