@@ -1,8 +1,9 @@
 import numpy as np
 
-HEIGHT = 2000000
 
-with open('inputs/inputx15.txt', 'r') as f:
+MAX = 4000000
+
+with open('inputs/inputx15 copy.txt', 'r') as f:
     a = f.read().strip().split('\n')
 
 n = len(a)
@@ -32,31 +33,31 @@ minx = np.min(sensors_x-distances)
 miny = np.min(sensors_y-distances)
 
 h, w = maxy - miny, maxx - minx 
-height = HEIGHT-miny
-line_at_height = np.zeros(w, np.int8)
 
 sensors_x -= minx
 sensors_y -= miny
 beacons_x -= minx
 beacons_y -= miny
 
+
 elements_at_height = set()
-for i in range(n):
-    distance = distances[i]
+bx, by = 0, 0
+for y in range(1-miny, MAX-miny):
+    current_line = np.ones((MAX), np.int8)
+    for i in range(n):
+        distance = distances[i]
+        range_x = sensors_x[i] - distance, sensors_x[i] + distance
 
-    if beacons_y[i] == height:
-        elements_at_height.add((beacons_y[i], beacons_x[i]))
-    if sensors_y[i] == height:
-        elements_at_height.add((sensors_y[i], sensors_x[i]))
+        for x in range(*range_x):
+            if x < MAX-minx and y < MAX-miny and x >= -minx and y >= -miny:
+                manhattan = np.abs(x - sensors_x[i]) + np.abs(y - sensors_y[i])
+                if manhattan <= distance:
+                    current_line[x+minx] = 0
+        
+    if np.sum(current_line) > 0:
+        bx = np.argmax(current_line)
+        by = y + miny
 
-    range_x = sensors_x[i] - distance, sensors_x[i] + distance
-
-    y = height
-    for x in range(*range_x):
-        manhattan = np.abs(x - sensors_x[i]) + np.abs(y - sensors_y[i])
-        if manhattan <= distance:
-            line_at_height[x] = -1
-
-
-ans = np.sum(line_at_height == -1) - len(elements_at_height)
+print(bx, by)
+ans = bx*MAX + by
 print(ans)
