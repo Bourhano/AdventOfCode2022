@@ -1,9 +1,10 @@
 import numpy as np
+from tqdm import tqdm
 
 
 MAX = 4000000
 
-with open('inputs/inputx15 copy.txt', 'r') as f:
+with open('inputs/inputx15.txt', 'r') as f:
     a = f.read().strip().split('\n')
 
 n = len(a)
@@ -32,17 +33,16 @@ maxy = np.max(sensors_y+distances)
 minx = np.min(sensors_x-distances)
 miny = np.min(sensors_y-distances)
 
-h, w = maxy - miny, maxx - minx 
+h, w = maxy - miny, maxx - minx
 
 sensors_x -= minx
 sensors_y -= miny
 beacons_x -= minx
 beacons_y -= miny
 
-
 elements_at_height = set()
 bx, by = 0, 0
-for y in range(1-miny, MAX-miny):
+for y in tqdm(range(-miny, MAX-miny + 1)):
     current_line = np.ones((MAX), np.int8)
     for i in range(n):
         distance = distances[i]
@@ -53,11 +53,16 @@ for y in range(1-miny, MAX-miny):
                 manhattan = np.abs(x - sensors_x[i]) + np.abs(y - sensors_y[i])
                 if manhattan <= distance:
                     current_line[x+minx] = 0
-        
+
+    # print(np.mean(current_line))
     if np.sum(current_line) > 0:
         bx = np.argmax(current_line)
         by = y + miny
+        break
 
 print(bx, by)
 ans = bx*MAX + by
 print(ans)
+
+# 7285459267035 too low
+# 12353598000000 too high

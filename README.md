@@ -5,3 +5,6 @@ This repository contains my Python solutions for the fun competition Code Advent
 While resolving, my goal is to achieve the actual answer with the least effort possible, and at the same time the least computational complexity. It is one of the good ways to profit from Python as an easy to use language and demonstrate its simplicity.
 
 The repo also contains some of the inputs and the solutions for almost all the days.
+
+The challenges are accessible here:
+https://adventofcode.com/2022/
